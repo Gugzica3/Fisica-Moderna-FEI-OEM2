@@ -23,81 +23,52 @@ def mostrar_menu():
 
 def calcular_tudo_por_n(n):
     raio_orbita = (n*n) * 5.29e-11
+    raio_orbita_nm = raio_orbita * 1e9
     velocidade_eletron = velocidade / n
     energia_cinetica = 13.6 / (n*n)
     energia_potencial = -27.2 / (n*n)
     energia_total = energia_cinetica * (-1)
     comprimento_onda = h1 / (m_eletron * velocidade_eletron)
+    comprimento_onda_nm = comprimento_onda * 1e9
     return {
         "raio_orbita": raio_orbita,
+        "raio_orbita_nm": raio_orbita_nm,
         "velocidade_eletron": velocidade_eletron,
         "energia_cinetica": energia_cinetica,
         "energia_potencial": energia_potencial,
         "energia_total": energia_total,
-        "comprimento_onda": comprimento_onda
+        "comprimento_onda": comprimento_onda,
+        "comprimento_onda_nm": comprimento_onda_nm
     }
     
-
-def calcular_efoton_por_ffoton_lambda(ffoton=None, lambda_foton=None):
-    if ffoton is not None:
-        Efoton = calcular_Efóton_dado_foton(ffóton=ffoton)
-    elif lambda_foton is not None:
-        Efoton = calcular_Efóton_dado_foton(λfóton=lambda_foton)
-    Efoton_ev = energia_joules_para_ev(Efoton)
-    return Efoton, Efoton_ev
-
-
-def calcular_ffoton_lambdafoton_por_efoton(Efoton_j=None, Efoton_ev=None):
-    if Efoton_ev is not None:
-        Efoton_j = Efoton_ev * e
-    ffoton = calcular_frequencia_foton(Efoton_j)
-    lambda_foton = calcular_comprimento_onda_foton(Efoton_j)
-    return ffoton, lambda_foton
-
-def calcular_n_transicao_emitido(n_inicial=None, n_final=None, ffoton=None, lambda_foton=None):
-   
-    if lambda_foton is not None and ffoton is None:
-        ffoton = c / lambda_foton
-
-    if ffoton is not None:
-        Efoton = h1 * ffoton
-        delta_E = Efoton
-      
-        if n_inicial is not None:
-            E_n_inicial = -Rydberg_constant * h * c / n_inicial**2
-            E_n_final = E_n_inicial - delta_E
-            n_final_calculado = ((-Rydberg_constant * h * c) / E_n_final)**0.5
-            return n_final_calculado
-        
-        elif n_final is not None:
-            E_n_final = -Rydberg_constant * h * c / n_final**2
-            E_n_inicial = E_n_final + delta_E
-            n_inicial_calculado = ((-Rydberg_constant * h * c) / E_n_inicial)**0.5
-            return n_inicial_calculado
             
-def calcular_n_transicao_absorvido(n_inicial=None, n_final=None, ffoton=None, lambda_foton=None):
-    # Converte lambda_foton para frequência se necessário
-    if lambda_foton is not None and ffoton is None:
-        ffoton = c / lambda_foton
-
-    if ffoton is not None:
-        Efoton = h * ffoton
+def propriedades(n_inicial,n_final):
         
-        delta_E = Efoton
+        Energia_n1 = -13.6 / n_inicial ** 2
+        Energia_n2 = -13.6 / n_final ** 2
+        
+        Energia_abs = Energia_n2 - Energia_n1
+        Energia_abs_J = Energia_abs * 1.60218e-19
+        Energia_emt = Energia_n1 - Energia_n2
+        Energia_emt_J = Energia_emt * 1.60218e-19
+        
 
-        if n_inicial is not None:
-            E_n_inicial = -Rydberg_constant * h * c / n_inicial**2
-            E_n_final = E_n_inicial + delta_E
-            n_final_calculado = ((-Rydberg_constant * h * c) / E_n_final)**0.5
-            return n_final_calculado
-       
-        elif n_final is not None:
-            E_n_final = -Rydberg_constant * h * c / n_final**2
-            E_n_inicial = E_n_final - delta_E
-            n_inicial_calculado = ((-Rydberg_constant * h * c) / E_n_inicial)**0.5
-            return n_inicial_calculado
+        comprimento = ((h1 * c) / Energia_emt_J)
+        comprimento_nm = comprimento * 1e9
 
-
+        frequencia = c / comprimento
+        frequencia_THz = frequencia / 1e12
+        
+        return{
+            "energia absorvida":Energia_abs,
+            "energia absorvida jaules":Energia_abs_J,
+            "energia emitida":Energia_emt,
+            "energia emitida jaules":Energia_emt_J,
+            "comprimento foton":comprimento,
+            "comprimento foton nm":comprimento_nm,
+            "frequencia":frequencia,
+            "frequencia THZ":frequencia_THz
+        }
 
 
 def executar_programa():
@@ -110,20 +81,23 @@ def executar_programa():
             resultados = calcular_tudo_por_n(n)
             print("\n***** RESULTADOS *****")
             print(f"[=] Raio da órbita (rn): {resultados['raio_orbita']:.3e} m")
+            print(f"[=] Raio da órbita (rn): {resultados['raio_orbita_nm']:.3e} nm")
             print(f"[=] Velocidade (vn): {resultados['velocidade_eletron']:.3e} m/s")
             print(f"[=] Comprimento de onda de De Broglie (λn): {resultados['comprimento_onda']:.3e} m")
-            print(f"[=] Energia cinética (Kn): {resultados['energia_cinetica']:.3e} J")
-            print(f"[=] Energia potencial (Un): {resultados['energia_potencial']:.3e} J")
+            print(f"[=] Comprimento de onda de De Broglie (λn): {resultados['comprimento_onda_nm']:.3e} nm")
+            print(f"[=] Energia cinética (Kn): {resultados['energia_cinetica']:.3e} Ev")
+            print(f"[=] Energia potencial (Un): {resultados['energia_potencial']:.3e} Ev")
             print(f"[=] Energia total (En): {resultados['energia_total']:.3e} J")
 
         elif escolha == "2":
             n_inicial = int(input("Digite o valor de n inicial: "))
             n_final = int(input("Digite o valor de n final: "))
-            Efóton, Efóton_ev, ffóton, λfóton = calcular_diferenca_energia_frequencia_comprimento(n_inicial, n_final)
+            resultados = propriedades(n_inicial,n_final)
             print("\n***** RESULTADOS *****")
-            print(f"\n[=] Energia do fóton: {Efóton:.3e} J ({Efóton_ev:.3e} eV)")
-            print(f"[=] Frequência do fóton: {ffóton:.3e} Hz")
-            print(f"[=] Comprimento de onda do fóton: {λfóton:.3e} m")
+            print(f"[=] Energia emitida do fóton: {resultados['energia emitida jaules']:.3e} J ({resultados['energia emitida']:.3e} eV)")
+            print(f"[=] Energia absorvida do fóton: {resultados['energia absorvida jaules']:.3e} J ({resultados['energia absorvida']:.3e} eV)")
+            print(f"[=] Frequência do fóton: {resultados['frequencia']:.3e} Hz {resultados['frequencia THZ']:.3e} THZ")
+            print(f"[=] Comprimento de onda do fóton: {resultados['comprimento foton']:.3e} m {resultados['comprimento foton nm']:.3e} nm")
 
         elif escolha == "3":
             n_inicial = input("Digite o valor de n inicial (deixe em branco se desconhecido): ").strip()
