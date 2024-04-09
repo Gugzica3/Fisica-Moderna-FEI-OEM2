@@ -47,19 +47,50 @@ def calcular_ffoton_lambdafoton_por_efoton(Efoton_j=None, Efoton_ev=None):
     lambda_foton = calcular_comprimento_onda_foton(Efoton_j)
     return ffoton, lambda_foton
 
+def calcular_n_transicao_emitido(n_inicial=None, n_final=None, ffoton=None, lambda_foton=None):
+   
+    if lambda_foton is not None and ffoton is None:
+        ffoton = c / lambda_foton
 
-rn, vn, lambda_n, kn, un, en = calcular_tudo_por_n(2)
+    if ffoton is not None:
+        Efoton = h * ffoton
+        delta_E = Efoton
+      
+        if n_inicial is not None:
+            E_n_inicial = -Rydberg_constant * h * c / n_inicial**2
+            E_n_final = E_n_inicial - delta_E
+            n_final_calculado = ((-Rydberg_constant * h * c) / E_n_final)**0.5
+            return n_final_calculado
+        
+        elif n_final is not None:
+            E_n_final = -Rydberg_constant * h * c / n_final**2
+            E_n_inicial = E_n_final + delta_E
+            n_inicial_calculado = ((-Rydberg_constant * h * c) / E_n_inicial)**0.5
+            return n_inicial_calculado
+            
+def calcular_n_transicao_absorvido(n_inicial=None, n_final=None, ffoton=None, lambda_foton=None):
+    # Converte lambda_foton para frequência se necessário
+    if lambda_foton is not None and ffoton is None:
+        ffoton = c / lambda_foton
+
+    if ffoton is not None:
+        Efoton = h * ffoton
+        
+        delta_E = Efoton
+
+        if n_inicial is not None:
+            E_n_inicial = -Rydberg_constant * h * c / n_inicial**2
+            E_n_final = E_n_inicial + delta_E
+            n_final_calculado = ((-Rydberg_constant * h * c) / E_n_final)**0.5
+            return n_final_calculado
+       
+        elif n_final is not None:
+            E_n_final = -Rydberg_constant * h * c / n_final**2
+            E_n_inicial = E_n_final - delta_E
+            n_inicial_calculado = ((-Rydberg_constant * h * c) / E_n_inicial)**0.5
+            return n_inicial_calculado
 
 
-Efoton, Efoton_ev = calcular_efoton_por_ffoton_lambda(ffoton=5e14)
-
-
-ffoton_test, lambda_foton_test = calcular_ffoton_lambdafoton_por_efoton(Efoton_j=3.027e-19)
-
-print("\n***** RESULTADOS DOS TESTES *****")
-print(f"\nFunção 1 - n=2: rn={rn:.3e} m, vn={vn:.3e} m/s, λn={lambda_n:.3e} m, Kn={kn:.3e} J, Un={un:.3e} J, En={en:.3e} J")
-print(f"Função 5A - Efóton: {Efoton:.3e} J ({Efoton_ev:.3e} eV)")
-print(f"Função 5B - ffóton: {ffoton_test:.3e} Hz, λfóton: {lambda_foton_test:.3e} m")
 
 def executar_programa():
     while True:
@@ -87,11 +118,42 @@ def executar_programa():
             print(f"[=] Comprimento de onda do fóton: {λfóton:.3e} m")
 
         elif escolha == "3":
-            # Esta opção requer uma implementação mais detalhada para lidar com os diferentes casos de entrada
-            pass
+            n_inicial = input("Digite o valor de n inicial (deixe em branco se desconhecido): ").strip()
+            n_final = input("Digite o valor de n final (deixe em branco se desconhecido): ").strip()
+            ffoton = input("Digite o valor de ffóton (Hz), ou deixe em branco: ").strip()
+            lambda_foton = input("Digite o valor de λfóton (m), ou deixe em branco: ").strip()
+
+            n_inicial = int(n_inicial) if n_inicial else None
+            n_final = int(n_final) if n_final else None
+            ffoton = float(ffoton) if ffoton else None
+            lambda_foton = float(lambda_foton) if lambda_foton else None
+
+            # Assume a existência de uma função como calcular_n_transicao_absorvido
+            resultado = calcular_n_transicao_absorvido(n_inicial=n_inicial, n_final=n_final, ffoton=ffoton, lambda_foton=lambda_foton)
+            print("\n***** RESULTADOS *****")
+            if n_inicial is None:
+                print(f"[=] n inicial calculado: {resultado:.2f}")
+            else:
+                print(f"[=] n final calculado: {resultado:.2f}")
 
         elif escolha == "4":
-            # Similar à opção 3, requer detalhamento adicional
+            n_inicial = input("Digite o valor de n inicial (deixe em branco se desconhecido): ").strip()
+            n_final = input("Digite o valor de n final (deixe em branco se desconhecido): ").strip()
+            ffoton = input("Digite o valor de ffóton (Hz), ou deixe em branco: ").strip()
+            lambda_foton = input("Digite o valor de λfóton (m), ou deixe em branco: ").strip()
+
+            n_inicial = int(n_inicial) if n_inicial else None
+            n_final = int(n_final) if n_final else None
+            ffoton = float(ffoton) if ffoton else None
+            lambda_foton = float(lambda_foton) if lambda_foton else None
+
+            # Assume a existência de uma função como calcular_n_transicao_emitido
+            resultado = calcular_n_transicao_emitido(n_inicial=n_inicial, n_final=n_final, ffoton=ffoton, lambda_foton=lambda_foton)
+            print("\n***** RESULTADOS *****")
+            if n_inicial is None:
+                print(f"[=] n inicial calculado: {resultado:.2f}")
+            else:
+                print(f"[=] n final calculado: {resultado:.2f}")
             pass
 
         elif escolha == "5":
