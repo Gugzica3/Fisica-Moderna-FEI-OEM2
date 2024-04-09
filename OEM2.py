@@ -53,22 +53,56 @@ def propriedades(n_inicial,n_final):
         Energia_emt_J = Energia_emt * 1.60218e-19
         
 
-        comprimento = ((h1 * c) / Energia_emt_J)
-        comprimento_nm = comprimento * 1e9
+        comprimento_e = ((h1 * c) / Energia_emt_J)
+        comprimento_e_nm = comprimento_e * 1e9
 
-        frequencia = c / comprimento
-        frequencia_THz = frequencia / 1e12
+        frequencia_e = c / comprimento_e
+        frequencia_e_THz = frequencia_e / 1e12
+
+        comprimento_a = ((h1 * c) / Energia_abs_J)
+        comprimento_a_nm = comprimento_a * 1e9
+
+        frequencia_a = c / comprimento_a
+        frequencia_a_THz = frequencia_a / 1e12
         
         return{
             "energia absorvida":Energia_abs,
             "energia absorvida jaules":Energia_abs_J,
             "energia emitida":Energia_emt,
             "energia emitida jaules":Energia_emt_J,
-            "comprimento foton":comprimento,
-            "comprimento foton nm":comprimento_nm,
-            "frequencia":frequencia,
-            "frequencia THZ":frequencia_THz
+            "comprimento emitido foton":comprimento_e,
+            "comprimento emitido foton nm":comprimento_e_nm,
+            "frequencia emitido":frequencia_e,
+            "frequencia emitido THZ":frequencia_e_THz,
+
+            "comprimento absorvida foton":comprimento_a,
+            "comprimento absorvida foton nm":comprimento_a_nm,
+            "frequencia absorvida":frequencia_a,
+            "frequencia absorvida THZ":frequencia_a_THz
         }
+def calcular_energia_por_frequencia_lambda(ffoton=None, lambda_foton=None):
+    if ffoton is not None:
+        Efoton_j = h1 * ffoton
+    elif lambda_foton is not None:
+        ffoton = c / (lambda_foton / 1e9)
+        Efoton_j = h1 * ffoton
+    else:
+        raise ValueError("Frequência ou comprimento de onda deve ser fornecido.")
+    
+    Efoton_ev = Efoton_j / e  # Conversão para elétrons-volts
+    return Efoton_j, Efoton_ev
+
+def calcular_ffoton_lambdafoton_por_efoton(Efoton_j=None, Efoton_ev=None):
+    if Efoton_ev is not None:
+        Efoton_j = Efoton_ev * e
+    elif Efoton_j is None:
+        raise ValueError("Energia do fóton deve ser fornecida em Joules ou elétrons-volts.")
+    
+    ffoton = Efoton_j / h1
+    lambda_foton = c / ffoton
+    lambda_foton = lambda_foton / 1e9
+    return ffoton, lambda_foton
+
 
 
 def executar_programa():
@@ -94,10 +128,14 @@ def executar_programa():
             n_final = int(input("Digite o valor de n final: "))
             resultados = propriedades(n_inicial,n_final)
             print("\n***** RESULTADOS *****")
+            print("\n FOTON EMITIDO")
             print(f"[=] Energia emitida do fóton: {resultados['energia emitida jaules']:.3e} J ({resultados['energia emitida']:.3e} eV)")
+            print(f"[=] Frequência do fóton: {resultados['frequencia emitido']:.3e} Hz {resultados['frequencia emitido THZ']:.3e} THZ")
+            print(f"[=] Comprimento de onda do fóton: {resultados['comprimento emitido foton']:.3e} m {resultados['comprimento emitido foton nm']:.3e} nm")
+            print("\n FOTON ABSORVIDO")
             print(f"[=] Energia absorvida do fóton: {resultados['energia absorvida jaules']:.3e} J ({resultados['energia absorvida']:.3e} eV)")
-            print(f"[=] Frequência do fóton: {resultados['frequencia']:.3e} Hz {resultados['frequencia THZ']:.3e} THZ")
-            print(f"[=] Comprimento de onda do fóton: {resultados['comprimento foton']:.3e} m {resultados['comprimento foton nm']:.3e} nm")
+            print(f"[=] Frequência do fóton: {resultados['frequencia absorvida']:.3e} Hz {resultados['frequencia absorvida THZ']:.3e} THZ")
+            print(f"[=] Comprimento de onda do fóton: {resultados['comprimento absorvida foton']:.3e} m {resultados['comprimento absorvida foton nm']:.3e} nm")
 
         elif escolha == "3":
             n_inicial = input("Digite o valor de n inicial (deixe em branco se desconhecido): ").strip()
@@ -142,8 +180,8 @@ def executar_programa():
             escolha_5 = input("Digite 'A' para calcular Efóton por ffóton ou λfóton, ou 'B' para calcular ffóton e λfóton por Efóton: ").upper()
             if escolha_5 == "A":
                 ffoton = float(input("Digite o valor de ffóton (Hz), ou deixe em branco se não souber: ") or "0")
-                lambda_foton = float(input("Digite o valor de λfóton (m), ou deixe em branco se não souber: ") or "0")
-                Efoton, Efoton_ev = calcular_efoton_por_ffoton_lambda(ffoton or None, lambda_foton or None)
+                lambda_foton = float(input("Digite o valor de λfóton (nm), ou deixe em branco se não souber: ") or "0")
+                Efoton, Efoton_ev = calcular_energia_por_frequencia_lambda(ffoton or None, lambda_foton or None)
                 print("\n***** RESULTADOS *****")
                 print(f"\n[=] Efóton: {Efoton:.3e} J ({Efoton_ev:.3e} eV)")
             elif escolha_5 == "B":
@@ -152,7 +190,7 @@ def executar_programa():
                 ffoton, lambda_foton = calcular_ffoton_lambdafoton_por_efoton(Efoton_j or None, Efoton_ev or None)
                 print("\n***** RESULTADOS *****")
                 print(f"\n[=] ffóton: {ffoton:.3e} Hz")
-                print(f"[=] λfóton: {lambda_foton:.3e} m")
+                print(f"[=] λfóton: {lambda_foton:.3e} nm")
 
         elif escolha == "0":
             print("Saindo do programa...")
