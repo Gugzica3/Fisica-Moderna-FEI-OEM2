@@ -1,6 +1,5 @@
 <h1 align="center">O átomo de Bohr e quantização</h1>
 <p align="center">
-  <img src="https://img.shields.io/github/license/IsaRosseto/FisicaModerna.svg" alt="Licença">
   <img src="https://img.shields.io/github/languages/top/IsaRosseto/FisicaModerna.svg" alt="Linguagem">
 </p>
 <p align="center">
@@ -42,8 +41,5 @@
         <li>Siga as instruções fornecidas no terminal para usar o programa.</li>
     </ol>
 
-  <h2>Licença 📝</h2>
-
-  <p>Este projeto está licenciado sob a <a href="https://opensource.org/licenses/MIT">Licença MIT</a>.</p>
 </body>
 </html>
