@@ -1,9 +1,10 @@
-h = 6.626e-34  
+h1 = 6.626e-34  
 c = 3e8  
-me = 9.109e-31  
+m_eletron = 9.11e-31  
 e = 1.602e-19  
 epsilon_0 = 8.854e-12  
-pi = 3.1416  
+pi = 3.1416
+velocidade = 2.187e6  
 
 
 print("***** ATOMO DE BOHR E QUANTIZAÇÃO COM PYTHON *****")
@@ -20,16 +21,22 @@ def mostrar_menu():
     print("0. Sair")
 
 
-mostrar_menu()
-
 def calcular_tudo_por_n(n):
-    rn = calcular_raio(n)
-    vn = calcular_velocidade(n)
-    lambda_n = calcular_comprimento_onda(n, vn)
-    kn = calcular_energia_cinetica(vn)
-    un = calcular_energia_potencial(rn)
-    en = calcular_energia_total(kn, un)
-    return rn, vn, lambda_n, kn, un, en
+    raio_orbita = (n*n) * 5.29e-11
+    velocidade_eletron = velocidade / n
+    energia_cinetica = 13.6 / (n*n)
+    energia_potencial = -27.2 / (n*n)
+    energia_total = energia_cinetica * (-1)
+    comprimento_onda = h1 / (m_eletron * velocidade_eletron)
+    return {
+        "raio_orbita": raio_orbita,
+        "velocidade_eletron": velocidade_eletron,
+        "energia_cinetica": energia_cinetica,
+        "energia_potencial": energia_potencial,
+        "energia_total": energia_total,
+        "comprimento_onda": comprimento_onda
+    }
+    
 
 def calcular_efoton_por_ffoton_lambda(ffoton=None, lambda_foton=None):
     if ffoton is not None:
@@ -53,7 +60,7 @@ def calcular_n_transicao_emitido(n_inicial=None, n_final=None, ffoton=None, lamb
         ffoton = c / lambda_foton
 
     if ffoton is not None:
-        Efoton = h * ffoton
+        Efoton = h1 * ffoton
         delta_E = Efoton
       
         if n_inicial is not None:
@@ -92,6 +99,7 @@ def calcular_n_transicao_absorvido(n_inicial=None, n_final=None, ffoton=None, la
 
 
 
+
 def executar_programa():
     while True:
         mostrar_menu()
@@ -101,12 +109,12 @@ def executar_programa():
             n = int(input("Digite o valor de n: "))
             resultados = calcular_tudo_por_n(n)
             print("\n***** RESULTADOS *****")
-            print(f"\n[=] Raio da órbita (rn): {resultados[0]:.3e} m")
-            print(f"[=] Velocidade (vn): {resultados[1]:.3e} m/s")
-            print(f"[=] Comprimento de onda de De Broglie (λn): {resultados[2]:.3e} m")
-            print(f"[=] Energia cinética (Kn): {resultados[3]:.3e} J")
-            print(f"[=] Energia potencial (Un): {resultados[4]:.3e} J")
-            print(f"[=] Energia total (En): {resultados[5]:.3e} J")
+            print(f"[=] Raio da órbita (rn): {resultados['raio_orbita']:.3e} m")
+            print(f"[=] Velocidade (vn): {resultados['velocidade_eletron']:.3e} m/s")
+            print(f"[=] Comprimento de onda de De Broglie (λn): {resultados['comprimento_onda']:.3e} m")
+            print(f"[=] Energia cinética (Kn): {resultados['energia_cinetica']:.3e} J")
+            print(f"[=] Energia potencial (Un): {resultados['energia_potencial']:.3e} J")
+            print(f"[=] Energia total (En): {resultados['energia_total']:.3e} J")
 
         elif escolha == "2":
             n_inicial = int(input("Digite o valor de n inicial: "))
@@ -128,7 +136,7 @@ def executar_programa():
             ffoton = float(ffoton) if ffoton else None
             lambda_foton = float(lambda_foton) if lambda_foton else None
 
-            # Assume a existência de uma função como calcular_n_transicao_absorvido
+           
             resultado = calcular_n_transicao_absorvido(n_inicial=n_inicial, n_final=n_final, ffoton=ffoton, lambda_foton=lambda_foton)
             print("\n***** RESULTADOS *****")
             if n_inicial is None:
@@ -147,7 +155,7 @@ def executar_programa():
             ffoton = float(ffoton) if ffoton else None
             lambda_foton = float(lambda_foton) if lambda_foton else None
 
-            # Assume a existência de uma função como calcular_n_transicao_emitido
+            
             resultado = calcular_n_transicao_emitido(n_inicial=n_inicial, n_final=n_final, ffoton=ffoton, lambda_foton=lambda_foton)
             print("\n***** RESULTADOS *****")
             if n_inicial is None:
@@ -178,4 +186,6 @@ def executar_programa():
 
         else:
             print("Opção inválida, por favor escolha novamente.")
+executar_programa()
+
 
