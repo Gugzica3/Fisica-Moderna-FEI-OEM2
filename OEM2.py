@@ -89,7 +89,7 @@ def calcular_energia_por_frequencia_lambda(ffoton=None, lambda_foton=None):
     else:
         raise ValueError("Frequência ou comprimento de onda deve ser fornecido.")
     
-    Efoton_ev = Efoton_j / e  # Conversão para elétrons-volts
+    Efoton_ev = Efoton_j / e  
     return Efoton_j, Efoton_ev
 
 def calcular_ffoton_lambdafoton_por_efoton(Efoton_j=None, Efoton_ev=None):
@@ -100,7 +100,7 @@ def calcular_ffoton_lambdafoton_por_efoton(Efoton_j=None, Efoton_ev=None):
     
     ffoton = Efoton_j / h1
     lambda_foton = c / ffoton
-    lambda_foton = lambda_foton / 1e9
+    lambda_foton = lambda_foton * 1e9
     return ffoton, lambda_foton
 
 
@@ -199,5 +199,3 @@ def executar_programa():
         else:
             print("Opção inválida, por favor escolha novamente.")
 executar_programa()
-
-
